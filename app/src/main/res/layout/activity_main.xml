@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.zz.squarebrick.MainActivity">
+
+    <com.zz.squarebrick.Game2
+        android:id="@+id/gameView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_rotate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#88ffff"
+            android:text="旋转"
+            android:textColor="#000"/>
+
+        <Button
+            android:id="@+id/btn_move_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#88ffff"
+            android:text="左移"
+            android:textColor="#000"/>
+
+        <Button
+            android:id="@+id/btn_move_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#88ffff"
+            android:text="右移"
+            android:textColor="#000"/>
+
+        <Button
+            android:id="@+id/btn_move_quick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#88ffff"
+            android:text="快速"
+            android:textColor="#000"/>
+    </LinearLayout>
+
+</RelativeLayout>
