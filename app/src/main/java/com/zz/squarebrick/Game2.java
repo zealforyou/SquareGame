@@ -26,9 +26,12 @@ import java.util.LinkedList;
  */
 
 public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnable {
+    public interface GameListener {
+        void onScore(int score);
+    }
+
     private MediaPlayer mp = new MediaPlayer();
     SoundPool soundPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
-
     private SurfaceHolder holder;
     private boolean init;
     private boolean runing;
@@ -40,11 +43,21 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
     private Square currentCell;
     private int[] limit = new int[rows];
     private boolean quikDown;
-    private int xiaochu;
+    private int xiaochu, chaoji, nice;
+    private int score;
+    private GameListener gameListener;
 
     public Game2(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
+    }
+
+    public void setGameListener(GameListener gameListener) {
+        this.gameListener = gameListener;
+    }
+
+    public int getScore() {
+        return score;
     }
 
     private void init() {
@@ -52,17 +65,19 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
         holder = getHolder();
         holder.addCallback(this);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        nice = soundPool.load(getContext(), R.raw.nice, 88);
+        chaoji = soundPool.load(getContext(), R.raw.chaoji, 99);
         xiaochu = soundPool.load(getContext(), R.raw.xiaochu, 100);
     }
 
     private void playBgm() {
         try {
-            AssetManager assetManager = getContext().getAssets();
-            AssetFileDescriptor fileDescriptor = assetManager.openFd("bgm1.mp3");
-            mp.setDataSource(fileDescriptor.getFileDescriptor(), fileDescriptor.getStartOffset(),
-                    fileDescriptor.getStartOffset());
             mp.setLooping(true);
             mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            AssetManager assetManager = getContext().getAssets();
+            AssetFileDescriptor fileDescriptor = assetManager.openFd("bgm.mp3");
+            mp.setDataSource(fileDescriptor.getFileDescriptor(), fileDescriptor.getStartOffset(),
+                    fileDescriptor.getLength());
 //            mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 //                @Override
 //                public void onPrepared(MediaPlayer mp) {
@@ -86,7 +101,6 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
         init = true;
         runing = true;
         initCell();
-
         new Thread(this).start();
     }
 
@@ -98,8 +112,12 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         init = false;
+        runing = false;
         mp.stop();
         mp.release();
+        mp = null;
+        soundPool.release();
+        soundPool = null;
     }
 
     private void initCell() {
@@ -115,7 +133,6 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
             control();
             try {
                 if (quikDown) {
-                    Thread.sleep(50);
                 } else {
                     Thread.sleep(500);
                 }
@@ -126,8 +143,10 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
     }
 
     public void rotate() {
-        if (currentCell.canRotate(90, cells, columns))
+        if (currentCell.canRotate(90, cells, columns)) {
             currentCell.rotate(90);
+            draw();
+        }
     }
 
     public void quikDown() {
@@ -137,12 +156,15 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
     public void moveRight() {
         if (currentCell.canMoveRight(cells, columns)) {
             currentCell.moveRight();
+            draw();
         }
     }
 
     public void moveLeft() {
-        if (currentCell.canMoveLeft(cells))
+        if (currentCell.canMoveLeft(cells)) {
             currentCell.moveLeft();
+            draw();
+        }
     }
 
     private void fade() {
@@ -168,6 +190,13 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
         Log.i("www", "count:" + count);
         //优化统计
         if (count > 0) {
+            score += count;
+            if (count > 1) {
+                soundPool.play(nice, 1, 1, 100, 0, 1);
+            }
+            if (gameListener != null) {
+                gameListener.onScore(score);
+            }
             soundPool.play(xiaochu, 1, 1, 100, 0, 1);
             for (int i = 0; i < limit.length; i++) {
                 limit[i] = 0;
@@ -198,7 +227,7 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
         }
     }
 
-    private void draw() {
+    private synchronized void draw() {
         Canvas canvas = holder.lockCanvas();
         canvas.drawColor(Color.BLACK);
         paint.setColor(Color.WHITE);
@@ -241,6 +270,8 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
                 post(new Runnable() {
                     @Override
                     public void run() {
+                        mp.stop();
+                        soundPool.play(chaoji, 1, 1, 100, 0, 1);
                         Toast.makeText(getContext(), "游戏结束", Toast.LENGTH_SHORT).show();
                     }
                 });

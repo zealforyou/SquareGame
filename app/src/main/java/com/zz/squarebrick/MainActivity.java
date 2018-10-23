@@ -3,6 +3,7 @@ package com.zz.squarebrick;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.TextView;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -12,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
     private View btn_move_left;
     private View btn_move_right;
     private View btn_move_quick;
+    private TextView tv_score;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         btn_move_left = findViewById(R.id.btn_move_left);
         btn_move_right = findViewById(R.id.btn_move_right);
         btn_move_quick = findViewById(R.id.btn_move_quick);
+        tv_score = (TextView) findViewById(R.id.tv_score);
         btn_rotate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,6 +51,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 gameView.quikDown();
+            }
+        });
+        gameView.setGameListener(new Game2.GameListener() {
+            @Override
+            public void onScore(final int score) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv_score.setText("得分：" + score);
+                    }
+                });
             }
         });
 
