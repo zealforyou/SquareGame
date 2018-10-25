@@ -148,7 +148,7 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
     }
 
     public void rotate() {
-        if (currentCell != null) {
+        if (currentCell != null && runing) {
             int[][] ints = currentCell.canRotate(90, cells, columns, rows);
             if (ints != null) {
                 currentCell.rotate(90, ints);
@@ -166,14 +166,14 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
     }
 
     public void moveRight() {
-        if (currentCell != null && currentCell.canMoveRight(cells, columns)) {
+        if (currentCell != null && currentCell.canMoveRight(cells, columns) && runing) {
             currentCell.moveRight();
             draw();
         }
     }
 
     public void moveLeft() {
-        if (currentCell != null && currentCell.canMoveLeft(cells)) {
+        if (currentCell != null && currentCell.canMoveLeft(cells) && runing) {
             currentCell.moveLeft();
             draw();
         }
