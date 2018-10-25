@@ -8,17 +8,17 @@ import java.util.List;
 
 public class Square {
     enum Type {
-        TYPE_L, TYPE_L1, TYPE_T, TYPE_I, TYPE_O, TYPE_N
+        TYPE_L, TYPE_L1, TYPE_T, TYPE_I, TYPE_O, TYPE_N, TYPE_N1
     }
 
-    public static final int colors[] = {0xff18FBC1, 0xffEEEC76, 0xff8CF399, 0xffDDAD1A, 0xffFDFD7B, 0xff792402, 0xff792402,
-            0xffFDF633};
+    public static final int colors[] = {0xffe03636, 0xffedd0be, 0xffff534d, 0xff25c6fc};
     public static final int[][] TYPE_L = {{-1, 0}, {0, 0}, {0, 1}, {0, 2}};//index 2
     public static final int[][] TYPE_L1 = {{-1, 2}, {0, 2}, {0, 1}, {0, 0}};//index 2
     public static final int[][] TYPE_T = {{-1, 1}, {0, 0}, {0, 1}, {0, 2}};//index 2
     public static final int[][] TYPE_I = {{-1, 0}, {-1, 1}, {-1, 2}, {-1, 3}};
     public static final int[][] TYPE_O = {{-1, 0}, {-1, 1}, {0, 0}, {0, 1}};
-    public static final int[][] TYPE_N = {{-1, 0}, {0, 0}, {0, 1}, {1, 1}};//1
+    public static final int[][] TYPE_N = {{-1, 1}, {0, 1}, {0, 0}, {1, 0}};//1
+    public static final int[][] TYPE_N1 = {{-1, 0}, {0, 0}, {0, 1}, {1, 1}};//1
 
     public Type type;
     public int[][] cells;
@@ -33,17 +33,14 @@ public class Square {
         int centerIndex = 0;
         switch (randomIndex + 1) {
             case 0:
+                type = Type.TYPE_L;
+                base = TYPE_L;
+                centerIndex = 2;
+                break;
             case 1:
-                int i = (int) (Math.random() * 2);
-                if (i == 0) {
-                    type = Type.TYPE_L;
-                    base = TYPE_L;
-                    centerIndex = 2;
-                } else {
-                    type = Type.TYPE_L1;
-                    base = TYPE_L1;
-                    centerIndex = 2;
-                }
+                type = Type.TYPE_L1;
+                base = TYPE_L1;
+                centerIndex = 2;
                 break;
             case 2:
                 type = Type.TYPE_T;
@@ -62,6 +59,11 @@ public class Square {
             case 5:
                 type = Type.TYPE_N;
                 base = TYPE_N;
+                centerIndex = 1;
+                break;
+            case 6:
+                type = Type.TYPE_N1;
+                base = TYPE_N1;
                 centerIndex = 1;
                 break;
         }

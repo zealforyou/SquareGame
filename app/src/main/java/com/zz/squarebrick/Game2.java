@@ -46,6 +46,7 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
     private Paint explodePaint;
     private int columns = 12;
     private int rows = 18;
+    int cellStrokeColor = 0x55ffffff;
     private int cellWidth;
     private LinkedList<Square.Cell> cells;
     private Square currentCell;
@@ -96,7 +97,8 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
     }
 
     private void playBgm() {
-        soundManager.playBgm("bgm.mp3");
+        String bgms[] = {"bgm.mp3", "sound_game_bgm.mp3", "sound_world_bgm.mp3"};
+        soundManager.playBgm(bgms[(int) (Math.random() * bgms.length)]);
     }
 
     @Override
@@ -179,16 +181,11 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
 
     private void fade() {
         int count = 0;
-
         //检测可消除的单元方块
         int fadeRow = 0;
         while ((fadeRow = hasFadeRow()) != -1) {
             //删除单元格
             count++;
-            score++;
-            if (gameListener != null) {
-                gameListener.onScore(score * 100);
-            }
             explode(fadeRow);
             soundManager.playEliminate(count);
             explode2(fadeRow);
@@ -197,8 +194,24 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
             draw();
             refreshLimit();
         }
+        caculateScore(count);
         soundManager.playN(count);
         Log.i("www", "count:" + count);
+    }
+
+    /**
+     * 计算分数
+     *
+     * @param count
+     */
+    private void caculateScore(int count) {
+        if (count > 0) {
+            score += Math.pow(count, 2);
+            if (gameListener != null) {
+                gameListener.onScore(score * 100);
+            }
+        }
+
     }
 
     /**
@@ -271,6 +284,7 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
     }
 
     private void drawCellStroke(Canvas canvas) {
+        paint.setColor(cellStrokeColor);
         for (int i = 0; i < rows + 1; i++) {
             canvas.drawLine(0, i * cellWidth, getWidth(), i * cellWidth, paint);
         }
@@ -287,7 +301,10 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
             quikDown = false;
             for (int i = 0; i < currentCell.cells.length; i++) {
                 cells.add(new Square.Cell(currentCell.cells[i][0], currentCell.cells[i][1], currentCell.color));
-                limit[currentCell.cells[i][0]]++;
+                if (currentCell.cells[i][0] > -1) {
+                    limit[currentCell.cells[i][0]]++;
+                }
+
             }
             currentCell = null;
             fade();

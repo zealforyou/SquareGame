@@ -34,15 +34,15 @@
             android:id="@+id/btn_rotate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#ffff00"
+            android:background="#ff25c6fc"
             android:text="旋转"
-            android:textColor="#000"/>
+            android:textColor="#fff"/>
 
         <Button
             android:id="@+id/btn_move_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#88ffff"
+            android:background="#edd0be"
             android:text="左移"
             android:textColor="#000"/>
 
@@ -50,7 +50,7 @@
             android:id="@+id/btn_move_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#88ffff"
+            android:background="#edd0be"
             android:text="右移"
             android:textColor="#000"/>
 
@@ -59,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="#ff0055"
+            android:background="#ff534d"
             android:text="快速"
             android:textColor="#fff"/>
     </LinearLayout>
