@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -16,9 +17,13 @@ import android.view.SurfaceView;
 import android.widget.Toast;
 
 import com.zz.squarebrick.game.Square;
+import com.zz.squarebrick.particle.factory.ParticleFactory;
+import com.zz.squarebrick.particle.factory.VerticalAscentFactory;
+import com.zz.squarebrick.particle.particle.Particle;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Random;
 
 /**
  * Created by zhuo.zhang on 2018/10/22.
@@ -38,6 +43,7 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
     private boolean init;
     private boolean runing;
     private Paint paint;
+    private Paint explodePaint;
     private int columns = 12;
     private int rows = 18;
     private int cellWidth;
@@ -69,6 +75,7 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
         holder = getHolder();
         holder.addCallback(this);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        explodePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         int bg[] = {R.mipmap.game_bg1, R.mipmap.game_bg2};
         gameBg = BitmapFactory.decodeResource(getResources(), bg[(int) (Math.random() * bg.length)]);
         matrix = new Matrix();
@@ -126,7 +133,6 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
         playBgm();
         while (runing) {
             draw();
-            control();
             try {
                 if (quikDown) {
                 } else {
@@ -135,6 +141,7 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            control();
         }
     }
 
@@ -182,15 +189,12 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
             if (gameListener != null) {
                 gameListener.onScore(score * 100);
             }
-            deleteRowCell(fadeRow);
+            explode(fadeRow);
             soundManager.playEliminate(count);
+            explode2(fadeRow);
+            deleteRowCell(fadeRow);
             moveAllCell(fadeRow);
             draw();
-            try {
-                Thread.sleep(300);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             refreshLimit();
         }
         soundManager.playN(count);
@@ -244,12 +248,25 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
     }
 
     private synchronized void draw() {
+        draw(0, 0);
+    }
+
+    /**
+     * @param transX
+     * @param transY
+     */
+    private synchronized void draw(float transX, float transY) {
         Canvas canvas = holder.lockCanvas();
         canvas.drawColor(Color.BLACK);
         canvas.drawBitmap(gameBg, matrix, paint);
         paint.setColor(Color.WHITE);
         drawCellStroke(canvas);
-        drawSquare(canvas);
+        if (currentCell != null)
+            drawSquare0(canvas, currentCell);
+        for (int i = 0; i < cells.size(); i++) {
+            Square.Cell cell = cells.get(i);
+            drawCell(canvas, cell.getRow(), cell.getCol(), cell.color, transX, transY);
+        }
         holder.unlockCanvasAndPost(canvas);
     }
 
@@ -259,15 +276,6 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
         }
         for (int j = 0; j < columns + 1; j++) {
             canvas.drawLine(j * cellWidth, 0, j * cellWidth, rows * cellWidth, paint);
-        }
-    }
-
-    private void drawSquare(Canvas canvas) {
-        if (currentCell != null)
-            drawSquare0(canvas, currentCell);
-        for (int i = 0; i < cells.size(); i++) {
-            Square.Cell cell = cells.get(i);
-            drawCell(canvas, cell.getRow(), cell.getCol(), cell.color);
         }
     }
 
@@ -308,21 +316,105 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void drawCell(Canvas canvas, int row, int col, int color) {
+        drawCell(canvas, row, col, color, 0, 0);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void drawCell(Canvas canvas, int row, int col, int color, float transX, float transY) {
         int radius = 10;
         paint.setColor(color);
         paint.setStyle(Paint.Style.FILL);
-        canvas.drawRoundRect(col * cellWidth, row * cellWidth,
-                col * cellWidth + cellWidth, row * cellWidth + cellWidth, radius, radius, paint);
+        canvas.drawRoundRect(col * cellWidth + transX, row * cellWidth + transY,
+                col * cellWidth + cellWidth + transX, row * cellWidth + cellWidth + transY, radius, radius, paint);
         paint.setColor(Color.WHITE);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(3);
-        canvas.drawRoundRect(col * cellWidth, row * cellWidth,
-                col * cellWidth + cellWidth, row * cellWidth + cellWidth, radius, radius, paint);
+        canvas.drawRoundRect(col * cellWidth + transX, row * cellWidth + transY,
+                col * cellWidth + cellWidth + transX, row * cellWidth + cellWidth + transY, radius, radius, paint);
         paint.setStyle(Paint.Style.FILL);
         paint.setStrokeWidth(0);
+    }
 
-//        canvas.drawRect(cell.getCol() * cellWidth, cell.getRow() * cellWidth,
-//                cell.getCol() * cellWidth + cellWidth, cell.getRow() * cellWidth + cellWidth, paint);
+    /**
+     * 爆破
+     */
+    public void explode(int row) {
+        //防止重复点击
+        long startTime = System.currentTimeMillis();
+        int duration = 100;
+        Random random = new Random();
+        while (System.currentTimeMillis() - startTime < duration) {
+            float transX = (random.nextFloat() - 0.5f) * getWidth() * 0.01f;
+            float transY = (random.nextFloat() - 0.5f) * getHeight() * 0.01f;
+            Canvas canvas = holder.lockCanvas();
+            canvas.drawColor(Color.BLACK);
+            canvas.drawBitmap(gameBg, matrix, paint);
+            paint.setColor(Color.WHITE);
+            drawCellStroke(canvas);
+            if (currentCell != null)
+                drawSquare0(canvas, currentCell);
+            for (int i = 0; i < cells.size(); i++) {
+                Square.Cell cell = cells.get(i);
+                if (cell.getRow() == row)
+                    drawCell(canvas, cell.getRow(), cell.getCol(), cell.color, transX, transY);
+                else
+                    drawCell(canvas, cell.getRow(), cell.getCol(), cell.color);
+            }
+            holder.unlockCanvasAndPost(canvas);
+        }
+    }
 
+    private void explode2(int row) {
+//        view.animate().setDuration(150).scaleX(0f).scaleY(0f).alpha(0f).start();
+        int random = (int) (Math.random() * 6);
+        ParticleFactory mParticleFactory = new VerticalAscentFactory();
+//        switch (random) {
+//            case 0:
+//                mParticleFactory = new BooleanFactory();
+//                break;
+//            case 1:
+//                mParticleFactory = new ExplodeParticleFactory();
+//                break;
+//            case 2:
+//                mParticleFactory = new FlyawayFactory();
+//                break;
+//            case 3:
+//                mParticleFactory = new InnerFallingParticleFactory();
+//                break;
+//            case 4:
+//                mParticleFactory = new VerticalAscentFactory();
+//                break;
+//            case 5:
+//                mParticleFactory = new FallingParticleFactory();
+//                break;
+//        }
+
+        Rect rect = new Rect(0, row * cellWidth, getWidth(), row * cellWidth + cellWidth);
+        Particle[][] particles = mParticleFactory.generateParticles(cells, rect, row, cellWidth);
+        //所有粒子运动
+        long startTime = System.currentTimeMillis();
+        int duration = 300;
+        long rate;
+
+        while ((rate = System.currentTimeMillis() - startTime) <= duration) {
+            Canvas canvas = holder.lockCanvas();
+            canvas.drawColor(Color.BLACK);
+            canvas.drawBitmap(gameBg, matrix, paint);
+            paint.setColor(Color.WHITE);
+            drawCellStroke(canvas);
+            if (currentCell != null)
+                drawSquare0(canvas, currentCell);
+            for (int i = 0; i < cells.size(); i++) {
+                Square.Cell cell = cells.get(i);
+                if (cell.getRow() != row)
+                    drawCell(canvas, cell.getRow(), cell.getCol(), cell.color);
+            }
+            for (Particle[] particle : particles) {
+                for (Particle p : particle) {
+                    p.advance(canvas, explodePaint, 1f * rate / duration);
+                }
+            }
+            holder.unlockCanvasAndPost(canvas);
+        }
     }
 }

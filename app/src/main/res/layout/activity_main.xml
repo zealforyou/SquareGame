@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/game_bg"
+    android:background="#000"
     tools:context="com.zz.squarebrick.MainActivity">
 
     <com.zz.squarebrick.Game2
