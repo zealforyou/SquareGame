@@ -123,8 +123,6 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
         runing = false;
         thread.interrupt();
         soundManager.gameOver();
-        soundManager.release();
-        GameApplication.getApp().setSoundManager(null);
     }
 
     private void initCell() {

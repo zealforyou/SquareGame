@@ -38,4 +38,11 @@ public class GamePrepareActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GameApplication.getApp().getSoundManager().release();
+        GameApplication.getApp().setSoundManager(null);
+    }
 }
