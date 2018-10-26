@@ -1,4 +1,4 @@
-package com.zz.squarebrick;
+package com.zz.squarebrick.online;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +21,8 @@ import com.vise.bluetoothchat.mode.FriendInfo;
 import com.vise.common_base.utils.ToastUtil;
 import com.vise.common_utils.log.LogUtils;
 import com.vise.common_utils.utils.character.DateTime;
+import com.zz.squarebrick.GameApplication;
+import com.zz.squarebrick.R;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
@@ -153,7 +155,7 @@ public class GameRoomActivity extends AppCompatActivity {
                 if (isConnect) {
                     GameApplication.getApp().getSoundManager().buttonSound();
 //                    sendMessage();
-                    startActivityForResult(new Intent(GameRoomActivity.this, MainActivity.class), 88);
+                    startActivityForResult(new Intent(GameRoomActivity.this, OnlineGameActivity.class), 88);
                 }
             }
         });

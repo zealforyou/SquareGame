@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
+import com.zz.squarebrick.outline.GamePrepareActivity;
+
 public class SplashActivity extends AppCompatActivity {
     int waitTime = 4000;
 

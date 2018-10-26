@@ -31,7 +31,7 @@ import com.vise.common_base.manager.AppManager;
 import com.vise.common_base.utils.ToastUtil;
 import com.vise.common_utils.utils.character.DateTime;
 import com.vise.common_utils.utils.view.ActivityUtil;
-import com.zz.squarebrick.GameRoomActivity;
+import com.zz.squarebrick.online.GameRoomActivity;
 import com.zz.squarebrick.R;
 
 import java.util.ArrayList;

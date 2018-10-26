@@ -1,4 +1,4 @@
-package com.zz.squarebrick;
+package com.zz.squarebrick.outline;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +14,8 @@ import com.vise.basebluetooth.common.BleState;
 import com.vise.basebluetooth.mode.BaseMessage;
 import com.vise.basebluetooth.utils.HexUtil;
 import com.vise.common_utils.log.LogUtils;
+import com.zz.squarebrick.online.GameRoomActivity;
+import com.zz.squarebrick.R;
 
 import java.io.UnsupportedEncodingException;
 

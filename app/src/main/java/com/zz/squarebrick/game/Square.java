@@ -12,8 +12,8 @@ public class Square {
     }
 
     public static final int colors[] = {0xffe03636, 0xffedd0be, 0xffff534d, 0xff25c6fc};
-    public static final int[][] TYPE_L = {{-1, 0}, {-1, 1}, {-1, 2}, {0, 2}};//index 2
-    public static final int[][] TYPE_L1 = {{-1, 0}, {-1, 1}, {-1, 2}, {0, 0}};//index 2
+    public static final int[][] TYPE_L = {{-1, 0}, {-1, 1}, {0, 1}, {1, 1}};//index 2
+    public static final int[][] TYPE_L1 = {{-1, 1}, {-1, 0}, {0, 0}, {1, 0}};//index 2
     public static final int[][] TYPE_T = {{-1, 1}, {0, 0}, {0, 1}, {0, 2}};//index 2
     public static final int[][] TYPE_I = {{-1, 0}, {-1, 1}, {-1, 2}, {-1, 3}};
     public static final int[][] TYPE_O = {{-1, 0}, {-1, 1}, {0, 0}, {0, 1}};
@@ -31,16 +31,16 @@ public class Square {
         Type type = Type.TYPE_L;
         int[][] base = TYPE_L;
         int centerIndex = 0;
-        switch (randomIndex + 1) {
+        switch (randomIndex) {
             case 0:
                 type = Type.TYPE_L;
                 base = TYPE_L;
-                centerIndex = 1;
+                centerIndex = 2;
                 break;
             case 1:
                 type = Type.TYPE_L1;
                 base = TYPE_L1;
-                centerIndex = 1;
+                centerIndex = 2;
                 break;
             case 2:
                 type = Type.TYPE_T;

@@ -1,4 +1,4 @@
-package com.zz.squarebrick;
+package com.zz.squarebrick.outline;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -16,6 +16,9 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Toast;
 
+import com.zz.squarebrick.GameApplication;
+import com.zz.squarebrick.R;
+import com.zz.squarebrick.SoundManager;
 import com.zz.squarebrick.game.Square;
 import com.zz.squarebrick.particle.factory.ParticleFactory;
 import com.zz.squarebrick.particle.factory.VerticalAscentFactory;

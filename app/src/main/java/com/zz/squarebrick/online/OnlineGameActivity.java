@@ -1,4 +1,4 @@
-package com.zz.squarebrick;
+package com.zz.squarebrick.online;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,12 +14,12 @@ import com.vise.basebluetooth.common.BleState;
 import com.vise.basebluetooth.mode.BaseMessage;
 import com.vise.basebluetooth.utils.HexUtil;
 import com.vise.common_utils.log.LogUtils;
-import com.zz.squarebrick.online.OnlineGame2;
+import com.zz.squarebrick.R;
 
 import java.io.UnsupportedEncodingException;
 
 //联机版
-public class MainActivity extends AppCompatActivity {
+public class OnlineGameActivity extends AppCompatActivity {
 
     private OnlineGame2 gameView;
     private View btn_rotate;

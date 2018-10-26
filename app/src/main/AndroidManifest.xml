@@ -13,11 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".online.OnlineGameActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".PlayActivity"
+            android:name=".outline.PlayActivity"
             android:screenOrientation="portrait">
 
         </activity>
@@ -40,11 +40,11 @@
             android:name="com.vise.bluetoothchat.activity.ChatActivity"
             android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name=".GameRoomActivity"
+            android:name=".online.GameRoomActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".GamePrepareActivity"
+            android:name=".outline.GamePrepareActivity"
             android:screenOrientation="portrait">
         </activity>
     </application>
