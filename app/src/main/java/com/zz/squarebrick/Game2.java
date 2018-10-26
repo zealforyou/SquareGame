@@ -137,6 +137,7 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
             draw();
             try {
                 if (quikDown) {
+                    Thread.sleep(50);
                 } else {
                     Thread.sleep(600);
                 }
@@ -165,12 +166,17 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
         }
     }
 
+    public void quikStop() {
+        quikDown = false;
+    }
+
     public void moveRight() {
         if (currentCell != null && currentCell.canMoveRight(cells, columns) && runing) {
             currentCell.moveRight();
             draw();
         }
     }
+
 
     public void moveLeft() {
         if (currentCell != null && currentCell.canMoveLeft(cells) && runing) {

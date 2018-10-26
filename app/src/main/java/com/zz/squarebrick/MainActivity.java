@@ -2,6 +2,7 @@ package com.zz.squarebrick;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     private View btn_move_right;
     private View btn_move_quick;
     private TextView tv_score;
+    private Runnable quickLeft, quickRight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         initView();
+        initRun();
     }
 
     private void initView() {
@@ -38,22 +41,62 @@ public class MainActivity extends AppCompatActivity {
                 gameView.rotate();
             }
         });
+        //左移
         btn_move_left.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 gameView.moveLeft();
             }
         });
+        btn_move_left.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    btn_move_left.removeCallbacks(quickLeft);
+                }
+                return false;
+            }
+        });
+        btn_move_left.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                quikLeft();
+                return true;
+            }
+        });
+        //右移
         btn_move_right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 gameView.moveRight();
             }
         });
-        btn_move_quick.setOnClickListener(new View.OnClickListener() {
+        btn_move_right.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                gameView.quikDown();
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    btn_move_right.removeCallbacks(quickRight);
+                }
+                return false;
+            }
+        });
+        btn_move_right.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                quickRight();
+                return true;
+            }
+        });
+        //快速下移
+        btn_move_quick.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    gameView.quikDown();
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    gameView.quikStop();
+                }
+                return true;
             }
         });
         gameView.setGameListener(new Game2.GameListener() {
@@ -67,6 +110,30 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+    }
 
+    private void initRun() {
+        quickLeft = new Runnable() {
+            @Override
+            public void run() {
+                gameView.moveLeft();
+                quikLeft();
+            }
+        };
+        quickRight = new Runnable() {
+            @Override
+            public void run() {
+                gameView.moveRight();
+                quickRight();
+            }
+        };
+    }
+
+    private void quikLeft() {
+        btn_move_left.postDelayed(quickLeft, 50);
+    }
+
+    private void quickRight() {
+        btn_move_right.postDelayed(quickRight, 50);
     }
 }
