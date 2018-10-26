@@ -37,6 +37,8 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
 
     public interface GameListener {
         void onScore(int score);
+
+        void gameOver(int score);
     }
 
     private SurfaceHolder holder;
@@ -322,6 +324,9 @@ public class Game2 extends SurfaceView implements SurfaceHolder.Callback, Runnab
                 post(new Runnable() {
                     @Override
                     public void run() {
+                        if (gameListener != null) {
+                            gameListener.gameOver(score * 100);
+                        }
                         soundManager.gameOver();
                         Toast.makeText(getContext(), "游戏结束", Toast.LENGTH_SHORT).show();
                     }

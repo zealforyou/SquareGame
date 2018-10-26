@@ -40,7 +40,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void intoGame() {
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, GamePrepareActivity.class));
         finish();
     }
 }

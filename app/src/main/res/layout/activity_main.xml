@@ -8,7 +8,7 @@
     android:background="#000"
     tools:context="com.zz.squarebrick.MainActivity">
 
-    <com.zz.squarebrick.Game2
+    <com.zz.squarebrick.online.OnlineGame2
         android:id="@+id/gameView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

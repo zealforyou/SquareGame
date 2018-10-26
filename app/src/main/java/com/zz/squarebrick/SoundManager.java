@@ -20,7 +20,7 @@ public class SoundManager {
     private SoundPool soundPool;
     private MediaPlayer player;
 
-    private int xiaochu, chaoji, nice, game_in2;
+    private int xiaochu, chaoji, nice, game_in2, button_sound;
     private int sound_Eliminate1, sound_Eliminate2, sound_Eliminate3, sound_Eliminate4;
     private int sound_n_good, sound_n_great, sound_n_absolute, sound_n_amazing, sound_n_unbelievable;
 
@@ -47,6 +47,9 @@ public class SoundManager {
         sound_n_absolute = soundPool.load(context, R.raw.sound_n_absolute, 100);
         sound_n_amazing = soundPool.load(context, R.raw.sound_n_amazing, 100);
         sound_n_unbelievable = soundPool.load(context, R.raw.sound_n_unbelievable, 100);
+
+        button_sound = soundPool.load(context, R.raw.button_sound, 100);
+
         init = true;
     }
 
@@ -124,6 +127,11 @@ public class SoundManager {
     public void gameInto() {
         if (!init) return;
         soundPool.play(game_in2, 1, 1, 100, 0, 1);
+    }
+
+    public void buttonSound() {
+        if (!init) return;
+        soundPool.play(button_sound, 1, 1, 100, 0, 1);
     }
 
     public void release() {
