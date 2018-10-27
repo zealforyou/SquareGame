@@ -55,7 +55,8 @@ public class SoundManager {
 
     public void playBgm(String assets) {
         if (init) {
-            player.stop();
+            if (player.isPlaying())
+                player.stop();
             AssetManager assetManager = context.getAssets();
             AssetFileDescriptor fileDescriptor = null;
             try {

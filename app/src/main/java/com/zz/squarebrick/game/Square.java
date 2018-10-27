@@ -12,8 +12,8 @@ public class Square {
     }
 
     public static final int colors[] = {0xffe03636, 0xffedd0be, 0xffff534d, 0xff25c6fc};
-    public static final int[][] TYPE_L = {{-1, 0}, {-1, 1}, {0, 1}, {1, 1}};//index 2
-    public static final int[][] TYPE_L1 = {{-1, 1}, {-1, 0}, {0, 0}, {1, 0}};//index 2
+    public static final int[][] TYPE_L = {{-2, 0}, {-2, 1}, {-1, 1}, {0, 1}};//index 2
+    public static final int[][] TYPE_L1 = {{-2, 1}, {-2, 0}, {-1, 0}, {0, 0}};//index 2
     public static final int[][] TYPE_T = {{-1, 1}, {0, 0}, {0, 1}, {0, 2}};//index 2
     public static final int[][] TYPE_I = {{-1, 0}, {-1, 1}, {-1, 2}, {-1, 3}};
     public static final int[][] TYPE_O = {{-1, 0}, {-1, 1}, {0, 0}, {0, 1}};
