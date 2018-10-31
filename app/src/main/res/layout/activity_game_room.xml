@@ -61,5 +61,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="@mipmap/button_15"/>
+        android:background="@mipmap/btn_prepare"
+        android:gravity="center"
+        android:text="开始游戏"
+        android:textColor="#FC8006"
+        android:textSize="28sp"/>
 </RelativeLayout>

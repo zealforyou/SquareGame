@@ -6,7 +6,16 @@ package com.zz.squarebrick.game;
 
 public class GameMsg {
     private int action;
+    private int score;
     private Prop prop;
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
 
     public int getAction() {
         return action;

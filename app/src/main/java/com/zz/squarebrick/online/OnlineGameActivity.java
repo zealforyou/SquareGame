@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.vise.basebluetooth.BluetoothChatHelper;
 import com.vise.basebluetooth.CommandHelper;
 import com.vise.basebluetooth.callback.IChatCallback;
@@ -15,6 +16,8 @@ import com.vise.basebluetooth.mode.BaseMessage;
 import com.vise.basebluetooth.utils.HexUtil;
 import com.vise.common_utils.log.LogUtils;
 import com.zz.squarebrick.R;
+import com.zz.squarebrick.game.Actions;
+import com.zz.squarebrick.game.GameMsg;
 
 import java.io.UnsupportedEncodingException;
 
@@ -26,9 +29,10 @@ public class OnlineGameActivity extends AppCompatActivity {
     private View btn_move_left;
     private View btn_move_right;
     private View btn_move_quick;
-    private TextView tv_score;
+    private TextView tv_score, tv_score_other;
     private Runnable quickLeft, quickRight;
     private BluetoothChatHelper bluetoothChatHelper;
+    Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +68,10 @@ public class OnlineGameActivity extends AppCompatActivity {
                     LogUtils.i("readData:" + HexUtil.encodeHexStr(data));
                     try {
                         BaseMessage message = CommandHelper.unpackData(data);
-                        LogUtils.i("message-----" + message.getMsgContent());
+                        LogUtils.i("message:" + message.getMsgContent());
+                        String msgContent = message.getMsgContent();
+                        GameMsg gameMsg = gson.fromJson(msgContent, GameMsg.class);
+                        onReceive(gameMsg);
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
@@ -83,10 +90,25 @@ public class OnlineGameActivity extends AppCompatActivity {
         }
     }
 
-    private void sendMessage(String msg) {
+    private void onReceive(GameMsg msg) {
+        final int score = msg.getScore();
+        switch (msg.getAction()) {
+            case Actions.ACTION_GET_SCORE:
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv_score_other.setText("对方：" + score);
+                    }
+                });
+                break;
+        }
+
+    }
+
+    private void sendMessage(GameMsg msg) {
         if (bluetoothChatHelper == null) return;
         try {
-            bluetoothChatHelper.write(CommandHelper.packMsg(msg));
+            bluetoothChatHelper.write(CommandHelper.packMsg(gson.toJson(msg)));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -99,6 +121,7 @@ public class OnlineGameActivity extends AppCompatActivity {
         btn_move_right = findViewById(R.id.btn_move_right);
         btn_move_quick = findViewById(R.id.btn_move_quick);
         tv_score = (TextView) findViewById(R.id.tv_score);
+        tv_score_other = (TextView) findViewById(R.id.tv_score_other);
         btn_rotate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,11 +189,14 @@ public class OnlineGameActivity extends AppCompatActivity {
         gameView.setGameListener(new OnlineGame2.GameListener() {
             @Override
             public void onScore(final int score) {
-                sendMessage("得分：" + score);
+                GameMsg msg = new GameMsg();
+                msg.setAction(Actions.ACTION_GET_SCORE);
+                msg.setScore(score);
+                sendMessage(msg);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        tv_score.setText("得分：" + score);
+                        tv_score.setText("我方：" + score);
                     }
                 });
             }

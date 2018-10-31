@@ -24,17 +24,17 @@
         <activity
             android:name=".SplashActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity android:name=".MenuActivity">
         </activity>
         <activity android:name="com.vise.bluetoothchat.activity.AddFriendActivity"/>
         <activity android:name="com.vise.bluetoothchat.activity.DeviceListActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity
             android:name="com.vise.bluetoothchat.activity.ChatActivity"

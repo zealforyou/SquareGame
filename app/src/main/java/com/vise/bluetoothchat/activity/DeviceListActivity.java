@@ -61,7 +61,10 @@ public class DeviceListActivity extends BaseChatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityUtil.startForwardActivity(DeviceListActivity.this, AddFriendActivity.class);
+                Intent intent = new Intent(DeviceListActivity.this, GameRoomActivity.class);
+                intent.putExtra("create", true);
+                startActivity(intent);
+//                ActivityUtil.startForwardActivity(DeviceListActivity.this, add.class);
             }
         });
 

@@ -17,26 +17,18 @@ import java.io.IOException;
 public class ConnectThread extends Thread {
 
     private BluetoothChatHelper mHelper;
-    private final BluetoothSocket mSocket;
+    private BluetoothSocket mSocket;
     private final BluetoothDevice mDevice;
     private String mSocketType;
+    boolean secure;
 
     public ConnectThread(BluetoothChatHelper bluetoothChatHelper, BluetoothDevice device, boolean secure) {
         mHelper = bluetoothChatHelper;
         mDevice = device;
-        BluetoothSocket tmp = null;
+        this.secure = secure;
         mSocketType = secure ? "Secure" : "Insecure";
 
-        try {
-            if (secure) {
-                tmp = device.createRfcommSocketToServiceRecord(ChatConstant.UUID_SECURE);
-            } else {
-                tmp = device.createInsecureRfcommSocketToServiceRecord(ChatConstant.UUID_INSECURE);
-            }
-        } catch (IOException e) {
-            BleLog.e("Socket Type: " + mSocketType + "create() failed", e);
-        }
-        mSocket = tmp;
+
     }
 
     public void run() {
@@ -44,7 +36,17 @@ public class ConnectThread extends Thread {
         setName("ConnectThread" + mSocketType);
 
         mHelper.getAdapter().cancelDiscovery();
-
+        BluetoothSocket tmp = null;
+        try {
+            if (secure) {
+                tmp = mDevice.createRfcommSocketToServiceRecord(ChatConstant.UUID_SECURE);
+            } else {
+                tmp = mDevice.createInsecureRfcommSocketToServiceRecord(ChatConstant.UUID_INSECURE);
+            }
+        } catch (IOException e) {
+            BleLog.e("Socket Type: " + mSocketType + "create() failed", e);
+        }
+        mSocket = tmp;
         try {
             mSocket.connect();
         } catch (IOException e) {

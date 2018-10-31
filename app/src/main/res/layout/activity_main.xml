@@ -19,9 +19,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:padding="10dp"
-        android:text="得分：0"
+        android:text="我方：0"
         android:textColor="#99ff32"
-        android:textSize="25sp"/>
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/tv_score_other"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="对方：0"
+        android:textColor="#ff534d"
+        android:textSize="20sp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
