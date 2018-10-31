@@ -20,7 +20,7 @@ public class SoundManager {
     private SoundPool soundPool;
     private MediaPlayer player;
 
-    private int xiaochu, chaoji, nice, game_in2, button_sound;
+    private int xiaochu, game_over, nice, game_in2, button_sound;
     private int sound_Eliminate1, sound_Eliminate2, sound_Eliminate3, sound_Eliminate4;
     private int sound_n_good, sound_n_great, sound_n_absolute, sound_n_amazing, sound_n_unbelievable;
 
@@ -28,14 +28,12 @@ public class SoundManager {
         this.context = context;
         soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         player = new MediaPlayer();
-        player.setLooping(true);
-        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
     }
 
     public void init() {
         nice = soundPool.load(context, R.raw.nice, 88);
         game_in2 = soundPool.load(context, R.raw.game_in2, 88);
-        chaoji = soundPool.load(context, R.raw.chaoji, 99);
+        game_over = soundPool.load(context, R.raw.game_over, 99);
         xiaochu = soundPool.load(context, R.raw.sound_create_strip, 100);
         sound_Eliminate1 = soundPool.load(context, R.raw.sound_eliminate1, 100);
         sound_Eliminate2 = soundPool.load(context, R.raw.sound_eliminate2, 100);
@@ -57,6 +55,9 @@ public class SoundManager {
         if (init) {
             if (player.isPlaying())
                 player.stop();
+            player.reset();
+            player.setLooping(true);
+            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
             AssetManager assetManager = context.getAssets();
             AssetFileDescriptor fileDescriptor = null;
             try {
@@ -121,8 +122,14 @@ public class SoundManager {
 
     public void gameOver() {
         if (!init) return;
-        soundPool.play(chaoji, 1, 1, 100, 0, 1);
-        player.stop();
+        soundPool.play(game_over, 1, 1, 100, 0, 1);
+        if (player.isPlaying())
+            player.stop();
+    }
+
+    public void stopAll() {
+        if (player.isPlaying())
+            player.stop();
     }
 
     public void gameInto() {
@@ -140,7 +147,7 @@ public class SoundManager {
             soundPool.release();
             soundPool = null;
         }
-        if (player != null) {
+        if (player != null && player.isPlaying()) {
             player.stop();
             player.release();
         }

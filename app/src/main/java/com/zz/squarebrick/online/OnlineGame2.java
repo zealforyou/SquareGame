@@ -14,7 +14,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.Toast;
 
 import com.zz.squarebrick.GameApplication;
 import com.zz.squarebrick.R;
@@ -126,9 +125,6 @@ public class OnlineGame2 extends SurfaceView implements SurfaceHolder.Callback, 
         init = false;
         runing = false;
         thread.interrupt();
-        soundManager.gameOver();
-        soundManager.release();
-        GameApplication.getApp().setSoundManager(null);
     }
 
     private void initCell() {
@@ -163,6 +159,12 @@ public class OnlineGame2 extends SurfaceView implements SurfaceHolder.Callback, 
             }
         }
 
+    }
+
+    public void finishGame() {
+        runing = false;
+        thread.interrupt();
+        soundManager.stopAll();
     }
 
     public void quikDown() {
@@ -331,8 +333,6 @@ public class OnlineGame2 extends SurfaceView implements SurfaceHolder.Callback, 
                         if (gameListener != null) {
                             gameListener.gameOver(score * 100);
                         }
-                        soundManager.gameOver();
-                        Toast.makeText(getContext(), "游戏结束", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

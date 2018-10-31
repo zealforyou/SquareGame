@@ -8,6 +8,7 @@ public class GameMsg {
     private int action;
     private int score;
     private Prop prop;
+    private GameOver gameOver;
 
     public int getScore() {
         return score;
@@ -31,5 +32,13 @@ public class GameMsg {
 
     public void setProp(Prop prop) {
         this.prop = prop;
+    }
+
+    public GameOver getGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(GameOver gameOver) {
+        this.gameOver = gameOver;
     }
 }

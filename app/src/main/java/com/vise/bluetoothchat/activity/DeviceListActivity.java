@@ -31,8 +31,10 @@ import com.vise.common_base.manager.AppManager;
 import com.vise.common_base.utils.ToastUtil;
 import com.vise.common_utils.utils.character.DateTime;
 import com.vise.common_utils.utils.view.ActivityUtil;
-import com.zz.squarebrick.online.GameRoomActivity;
+import com.zz.squarebrick.GameApplication;
 import com.zz.squarebrick.R;
+import com.zz.squarebrick.online.GameRoomActivity;
+import com.zz.squarebrick.outline.GamePrepareActivity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,13 +60,19 @@ public class DeviceListActivity extends BaseChatActivity
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton create_room = (FloatingActionButton) findViewById(R.id.create_room);
+        create_room.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 Intent intent = new Intent(DeviceListActivity.this, GameRoomActivity.class);
                 intent.putExtra("create", true);
                 startActivity(intent);
-//                ActivityUtil.startForwardActivity(DeviceListActivity.this, add.class);
+            }
+        });
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityUtil.startForwardActivity(DeviceListActivity.this, AddFriendActivity.class);
             }
         });
 
@@ -170,7 +178,7 @@ public class DeviceListActivity extends BaseChatActivity
             displayAboutDialog();
             return true;
         } else if (id == R.id.menu_share) {
-            ToastUtil.showToast(mContext, getString(R.string.menu_share));
+            ActivityUtil.startForwardActivity(this, GamePrepareActivity.class);
             return true;
         }
 
@@ -249,4 +257,10 @@ public class DeviceListActivity extends BaseChatActivity
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GameApplication.getApp().getSoundManager().release();
+        GameApplication.getApp().setSoundManager(null);
+    }
 }

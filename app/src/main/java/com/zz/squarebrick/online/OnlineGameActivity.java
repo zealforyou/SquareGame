@@ -1,5 +1,7 @@
 package com.zz.squarebrick.online;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
@@ -15,9 +17,11 @@ import com.vise.basebluetooth.common.BleState;
 import com.vise.basebluetooth.mode.BaseMessage;
 import com.vise.basebluetooth.utils.HexUtil;
 import com.vise.common_utils.log.LogUtils;
+import com.zz.squarebrick.GameApplication;
 import com.zz.squarebrick.R;
 import com.zz.squarebrick.game.Actions;
 import com.zz.squarebrick.game.GameMsg;
+import com.zz.squarebrick.game.GameOver;
 
 import java.io.UnsupportedEncodingException;
 
@@ -29,10 +33,11 @@ public class OnlineGameActivity extends AppCompatActivity {
     private View btn_move_left;
     private View btn_move_right;
     private View btn_move_quick;
-    private TextView tv_score, tv_score_other;
+    private TextView tv_score, tv_score_other, tv_pk_score;
     private Runnable quickLeft, quickRight;
     private BluetoothChatHelper bluetoothChatHelper;
-    Gson gson = new Gson();
+    private Gson gson = new Gson();
+    private int pkSocre = 5000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +106,16 @@ public class OnlineGameActivity extends AppCompatActivity {
                     }
                 });
                 break;
+            case Actions.ACTION_GAME_OVER:
+                final GameOver gameOver = msg.getGameOver();
+                gameView.finishGame();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showGameOverDialog(gameOver, true);
+                    }
+                });
+                break;
         }
 
     }
@@ -120,8 +135,10 @@ public class OnlineGameActivity extends AppCompatActivity {
         btn_move_left = findViewById(R.id.btn_move_left);
         btn_move_right = findViewById(R.id.btn_move_right);
         btn_move_quick = findViewById(R.id.btn_move_quick);
+        tv_pk_score = (TextView) findViewById(R.id.tv_pk_score);
         tv_score = (TextView) findViewById(R.id.tv_score);
         tv_score_other = (TextView) findViewById(R.id.tv_score_other);
+        tv_pk_score.setText("（ " + pkSocre + "分胜利 ）");
         btn_rotate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,23 +206,85 @@ public class OnlineGameActivity extends AppCompatActivity {
         gameView.setGameListener(new OnlineGame2.GameListener() {
             @Override
             public void onScore(final int score) {
-                GameMsg msg = new GameMsg();
-                msg.setAction(Actions.ACTION_GET_SCORE);
-                msg.setScore(score);
-                sendMessage(msg);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        tv_score.setText("我方：" + score);
-                    }
-                });
+                if (score >= pkSocre) {
+                    GameMsg msg = new GameMsg();
+                    msg.setAction(Actions.ACTION_GAME_OVER);
+                    final GameOver over = new GameOver();
+                    over.setResult(GameOver.RESULT_STATUS_WIN);
+                    over.setScore(score);
+                    msg.setGameOver(over);
+                    gameView.finishGame();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showGameOverDialog(over, false);
+                        }
+                    });
+                    sendMessage(msg);
+                } else {
+                    GameMsg msg = new GameMsg();
+                    msg.setAction(Actions.ACTION_GET_SCORE);
+                    msg.setScore(score);
+                    sendMessage(msg);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tv_score.setText("我方：" + score);
+                        }
+                    });
+                }
+
             }
 
             @Override
             public void gameOver(int score) {
-
+                GameMsg msg = new GameMsg();
+                msg.setAction(Actions.ACTION_GAME_OVER);
+                final GameOver over = new GameOver();
+                over.setResult(GameOver.RESULT_STATUS_LOSE);
+                over.setScore(score);
+                msg.setGameOver(over);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showGameOverDialog(over, false);
+                    }
+                });
+                sendMessage(msg);
             }
         });
+    }
+
+    private void showGameOverDialog(GameOver gameOver, boolean opponent) {
+        GameApplication.getApp().getSoundManager().gameOver();
+        Dialog dialog = new Dialog(this);
+        dialog.setCancelable(true);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                finish();
+            }
+        });
+        View inflate = getLayoutInflater().inflate(R.layout.dialog_game_over, null);
+        TextView tv_game_win = (TextView) inflate.findViewById(R.id.tv_game_win);
+        //对手
+        if (opponent) {
+            if (gameOver.getResult() == GameOver.RESULT_STATUS_WIN) {
+                tv_game_win.setText("你输了");
+            } else {
+                tv_game_win.setText("你赢了");
+            }
+        } else {
+            if (gameOver.getResult() == GameOver.RESULT_STATUS_LOSE) {
+                tv_game_win.setText("你输了");
+            } else {
+                tv_game_win.setText("你赢了");
+            }
+        }
+
+        dialog.setContentView(inflate);
+        dialog.show();
     }
 
     private void initRun() {
@@ -234,8 +313,26 @@ public class OnlineGameActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        GameMsg msg = new GameMsg();
+        msg.setAction(Actions.ACTION_GAME_OVER);
+        GameOver over = new GameOver();
+        over.setResult(GameOver.RESULT_STATUS_LOSE);
+        over.setScore(0);
+        msg.setGameOver(over);
+        sendMessage(msg);
+        btn_rotate.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                OnlineGameActivity.super.onBackPressed();
+            }
+        }, 300);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        GameApplication.getApp().getSoundManager().stopAll();
         bluetoothChatHelper = null;
     }
 }

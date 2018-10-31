@@ -11,4 +11,5 @@ public class Actions {
     public static final int ACTION_OTHER_PREPARED = 2002;//对方已准备
 
     public static final int ACTION_GET_SCORE = 3001;//获取对方得分
+    public static final int ACTION_GAME_OVER = 3002;//
 }

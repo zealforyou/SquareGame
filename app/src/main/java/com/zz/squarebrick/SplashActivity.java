@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
-import com.zz.squarebrick.outline.GamePrepareActivity;
+import com.vise.bluetoothchat.activity.DeviceListActivity;
 
 public class SplashActivity extends AppCompatActivity {
     int waitTime = 4000;
@@ -42,7 +42,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void intoGame() {
-        startActivity(new Intent(this, GamePrepareActivity.class));
+        startActivity(new Intent(this, DeviceListActivity.class));
         finish();
     }
 }
