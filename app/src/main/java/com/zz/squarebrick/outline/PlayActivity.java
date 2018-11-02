@@ -1,5 +1,7 @@
 package com.zz.squarebrick.outline;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
@@ -14,15 +16,17 @@ import com.vise.basebluetooth.common.BleState;
 import com.vise.basebluetooth.mode.BaseMessage;
 import com.vise.basebluetooth.utils.HexUtil;
 import com.vise.common_utils.log.LogUtils;
-import com.zz.squarebrick.online.GameRoomActivity;
+import com.zz.squarebrick.GameApplication;
 import com.zz.squarebrick.R;
+import com.zz.squarebrick.online.GameRoomActivity;
+import com.zz.squarebrick.online.OnlineGame2;
 
 import java.io.UnsupportedEncodingException;
 
 //单机版
 public class PlayActivity extends AppCompatActivity {
 
-    private Game2 gameView;
+    private OnlineGame2 gameView;
     private View btn_rotate;
     private View btn_move_left;
     private View btn_move_right;
@@ -94,7 +98,7 @@ public class PlayActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        gameView = (Game2) findViewById(R.id.gameView);
+        gameView = (OnlineGame2) findViewById(R.id.gameView);
         btn_rotate = findViewById(R.id.btn_rotate);
         btn_move_left = findViewById(R.id.btn_move_left);
         btn_move_right = findViewById(R.id.btn_move_right);
@@ -164,7 +168,7 @@ public class PlayActivity extends AppCompatActivity {
                 return true;
             }
         });
-        gameView.setGameListener(new Game2.GameListener() {
+        gameView.setGameListener(new OnlineGame2.GameListener() {
             @Override
             public void onScore(final int score) {
                 sendMessage("得分：" + score);
@@ -177,10 +181,33 @@ public class PlayActivity extends AppCompatActivity {
             }
 
             @Override
-            public void gameOver(int score) {
-
+            public void gameOver(final int score) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showGameOverDialog(score);
+                    }
+                });
             }
         });
+    }
+
+    private void showGameOverDialog(int score) {
+        GameApplication.getApp().getSoundManager().gameOver();
+        Dialog dialog = new Dialog(this);
+        dialog.setCancelable(true);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                finish();
+            }
+        });
+        View inflate = getLayoutInflater().inflate(R.layout.dialog_game_over, null);
+        TextView tv_game_win = (TextView) inflate.findViewById(R.id.tv_game_win);
+        tv_game_win.setText(String.format("得分：%s,再接再厉", score));
+        dialog.setContentView(inflate);
+        dialog.show();
     }
 
     private void initRun() {

@@ -37,7 +37,7 @@ public class OnlineGameActivity extends AppCompatActivity {
     private Runnable quickLeft, quickRight;
     private BluetoothChatHelper bluetoothChatHelper;
     private Gson gson = new Gson();
-    private int pkSocre = 5000;
+    private int pkSocre =2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +138,11 @@ public class OnlineGameActivity extends AppCompatActivity {
         tv_pk_score = (TextView) findViewById(R.id.tv_pk_score);
         tv_score = (TextView) findViewById(R.id.tv_score);
         tv_score_other = (TextView) findViewById(R.id.tv_score_other);
-        tv_pk_score.setText("（ " + pkSocre + "分胜利 ）");
+        if (pkSocre == 0) {
+            tv_pk_score.setText("");
+        } else {
+            tv_pk_score.setText("（ " + pkSocre + "分胜利 ）");
+        }
         btn_rotate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -206,7 +210,7 @@ public class OnlineGameActivity extends AppCompatActivity {
         gameView.setGameListener(new OnlineGame2.GameListener() {
             @Override
             public void onScore(final int score) {
-                if (score >= pkSocre) {
+                if (pkSocre != 0 && score >= pkSocre) {
                     GameMsg msg = new GameMsg();
                     msg.setAction(Actions.ACTION_GAME_OVER);
                     final GameOver over = new GameOver();

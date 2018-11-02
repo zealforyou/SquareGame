@@ -132,13 +132,16 @@ public class OnlineGame2 extends SurfaceView implements SurfaceHolder.Callback, 
         currentCell = Square.generate(columns);
     }
 
+    /**
+     * 游戏启动
+     */
     @Override
     public void run() {
         playBgm();
         while (runing) {
             draw();
             try {
-                if (quikDown) {
+                if (quikDown || currentCell.canRotate(90, cells, columns, rows) == null) {
                     Thread.sleep(50);
                 } else {
                     Thread.sleep(600);
