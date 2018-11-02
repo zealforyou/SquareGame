@@ -109,7 +109,7 @@ public class AddFriendActivity extends BaseChatActivity {
     protected void initWidget() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ((TextView)findViewById(R.id.title)).setText(getString(R.string.add_friend));
+        ((TextView) findViewById(R.id.title)).setText(getString(R.string.add_friend));
 
         mProgressDialog = new ProgressDialog(mContext);
         mScanPb = (ProgressBar) findViewById(R.id.add_friend_scan_progress);
@@ -128,15 +128,15 @@ public class AddFriendActivity extends BaseChatActivity {
         mAddFriendLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(mBluetoothDevices.get(position).getBondState() != BluetoothDevice.BOND_BONDED){
+                if (mBluetoothDevices.get(position).getBondState() != BluetoothDevice.BOND_BONDED) {
                     startPair();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         mBluetoothDevices.get(position).createBond();
-                    } else{
+                    } else {
                         //利用反射方法调用BluetoothDevice.createBond(BluetoothDevice remoteDevice);
                         Method createBondMethod = null;
                         try {
-                            createBondMethod =BluetoothDevice.class.getMethod("createBond");
+                            createBondMethod = BluetoothDevice.class.getMethod("createBond");
                             createBondMethod.invoke(mBluetoothDevices.get(position));
                         } catch (NoSuchMethodException e) {
                             e.printStackTrace();
@@ -148,15 +148,15 @@ public class AddFriendActivity extends BaseChatActivity {
                     }
                     mProgressDialog.setMessage(getString(R.string.add_friend_loading));
                     mProgressDialog.show();
-                } else{
+                } else {
                     ToastUtil.showToast(mContext, getString(R.string.already_is_friend));
                 }
             }
         });
     }
 
-    private void beginDiscover(){
-        if(mScanBroadcastReceiver == null){
+    private void beginDiscover() {
+        if (mScanBroadcastReceiver == null) {
             mScanBroadcastReceiver = new ScanBroadcastReceiver(scanCallback);
         }
         //注册蓝牙扫描监听器
@@ -164,11 +164,18 @@ public class AddFriendActivity extends BaseChatActivity {
         intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
         intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         registerReceiver(mScanBroadcastReceiver, intentFilter);
-        BluetoothUtil.enableBluetooth((Activity) mContext, 1);
+        if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            BluetoothUtil.enableBluetooth((Activity) mContext, 1);
+        } else {
+            BluetoothAdapter.getDefaultAdapter().startDiscovery();
+            LogUtils.i("Start Scan");
+            mScanPb.setVisibility(View.VISIBLE);
+        }
+
     }
 
-    private void startPair(){
-        if(mPairBroadcastReceiver == null){
+    private void startPair() {
+        if (mPairBroadcastReceiver == null) {
             mPairBroadcastReceiver = new PairBroadcastReceiver(pairCallback);
         }
         //注册蓝牙配对监听器
@@ -179,12 +186,12 @@ public class AddFriendActivity extends BaseChatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == 1){
-            if(resultCode == RESULT_OK){
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
                 BluetoothAdapter.getDefaultAdapter().startDiscovery();
                 LogUtils.i("Start Scan");
                 mScanPb.setVisibility(View.VISIBLE);
-            } else{
+            } else {
                 finish();
             }
         }
@@ -194,11 +201,11 @@ public class AddFriendActivity extends BaseChatActivity {
     @Override
     protected void onDestroy() {
         BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
-        if(mScanBroadcastReceiver != null){
+        if (mScanBroadcastReceiver != null) {
             unregisterReceiver(mScanBroadcastReceiver);
             mScanBroadcastReceiver = null;
         }
-        if(mPairBroadcastReceiver != null){
+        if (mPairBroadcastReceiver != null) {
             unregisterReceiver(mPairBroadcastReceiver);
             mPairBroadcastReceiver = null;
         }

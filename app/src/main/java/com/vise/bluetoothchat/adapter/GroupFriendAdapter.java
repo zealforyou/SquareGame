@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.vise.bluetoothchat.mode.FriendInfo;
 import com.vise.bluetoothchat.mode.GroupInfo;
+import com.zz.squarebrick.AvatarBitmapUtils;
 import com.zz.squarebrick.R;
 
 import java.util.List;
@@ -23,10 +24,12 @@ public class GroupFriendAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private List<GroupInfo> groupInfoList;
+    private final AvatarBitmapUtils avatarUtils;
 
     public GroupFriendAdapter(Context context, List<GroupInfo> groupInfoList) {
         this.context = context;
         this.groupInfoList = groupInfoList;
+        avatarUtils = AvatarBitmapUtils.getAvatarUtils();
     }
 
     @Override
@@ -123,6 +126,7 @@ public class GroupFriendAdapter extends BaseExpandableListAdapter {
         FriendInfo friendInfo = groupInfoList.get(groupPosition).getFriendList().get(childPosition);
         friendViewHolder.nameTv.setText(friendInfo.getFriendNickName()+"("+friendInfo.getIdentificationName()+")");
         friendViewHolder.addressTv.setText(friendInfo.getDeviceAddress());
+        friendViewHolder.iconIv.setImageBitmap(avatarUtils.getAvartar(friendInfo.getAvatarId()));
         if(friendInfo.isOnline()){
             friendViewHolder.statusTv.setText(context.getString(R.string.device_online));
         } else{

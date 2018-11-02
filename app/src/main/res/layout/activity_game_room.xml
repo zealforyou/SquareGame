@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#161616"
+    android:background="@mipmap/ic_game_bg1"
     android:paddingBottom="20dp"
     android:paddingTop="20dp"
     tools:context="com.zz.squarebrick.online.GameRoomActivity">
@@ -17,19 +17,41 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_player1"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="未连接"
-            android:textColor="#fff"
-            android:textSize="16sp"/>
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@mipmap/default_head"/>
+
+            <TextView
+                android:id="@+id/tv_player1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="未连接"
+                android:textColor="#E3710C"
+                android:textSize="18sp"/>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="70dp"
+            android:layout_height="70dp">
+
+            <ImageView
+                android:id="@+id/iv_player1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:background="#FFC629"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@mipmap/ic_game_icon11"/>
+        </FrameLayout>
+
 
     </LinearLayout>
 
@@ -41,29 +63,52 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/default_head"/>
+        <FrameLayout
+            android:layout_width="70dp"
+            android:layout_height="70dp">
 
-        <TextView
-            android:id="@+id/tv_player2"
+            <ImageView
+                android:id="@+id/iv_player2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:background="#CDF2FF"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@mipmap/ic_game_icon_30"/>
+        </FrameLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="未连接"
-            android:textColor="#fff"
-            android:textSize="16sp"/>
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/tv_player2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="未连接"
+                android:textColor="#CDF2FF"
+                android:textSize="18sp"/>
+
+        </LinearLayout>
+
     </LinearLayout>
+
 
     <Button
         android:id="@+id/btn_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@mipmap/btn_prepare"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@mipmap/ic_game_icon8"
         android:gravity="center"
-        android:text="开始游戏"
         android:textColor="#FC8006"
-        android:textSize="28sp"/>
+        android:textSize="20sp"/>
 </RelativeLayout>

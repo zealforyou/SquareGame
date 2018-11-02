@@ -4,8 +4,6 @@ import android.bluetooth.BluetoothDevice;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
-
 /**
  * @Description: 好友信息
  * @author: <a href="http://www.xiaoyaoyou1212.com">DAWI</a>
@@ -21,6 +19,7 @@ public class FriendInfo implements Parcelable {
     private String joinTime;//加入时间
     private boolean isOnline;//是否在线
     private BluetoothDevice bluetoothDevice;
+    private int avatarId;
 
     public FriendInfo() {
     }
@@ -55,6 +54,14 @@ public class FriendInfo implements Parcelable {
     public FriendInfo setFriendId(int friendId) {
         this.friendId = friendId;
         return this;
+    }
+
+    public int getAvatarId() {
+        return avatarId;
+    }
+
+    public void setAvatarId(int avatarId) {
+        this.avatarId = avatarId;
     }
 
     public String getFriendNickName() {

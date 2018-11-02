@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -22,6 +23,7 @@ import com.vise.bluetoothchat.common.AppConstant;
 import com.vise.bluetoothchat.mode.FriendInfo;
 import com.vise.common_base.utils.ToastUtil;
 import com.vise.common_utils.log.LogUtils;
+import com.zz.squarebrick.AvatarBitmapUtils;
 import com.zz.squarebrick.GameApplication;
 import com.zz.squarebrick.R;
 import com.zz.squarebrick.game.Actions;
@@ -38,6 +40,8 @@ public class GameRoomActivity extends AppCompatActivity {
     private TextView tv_player2;
     private boolean isConnect;
     private Button btn_start;
+    private ImageView iv_player1;
+    private ImageView iv_player2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +120,8 @@ public class GameRoomActivity extends AppCompatActivity {
             } else if (mFriendInfo != null) {
                 tv_player1.setText(mFriendInfo.getFriendNickName());
             }
+            iv_player1.setImageBitmap(AvatarBitmapUtils.getAvatarUtils().getAvartar(2));
+
         }
 
         @Override
@@ -131,10 +137,13 @@ public class GameRoomActivity extends AppCompatActivity {
     private void initData() {
         mFriendInfo = this.getIntent().getParcelableExtra(AppConstant.FRIEND_INFO);
         if (mFriendInfo == null) {
-            btn_start.setText("开始游戏");
+            btn_start.setBackgroundResource(R.mipmap.ic_game_icon8);
+            iv_player2.setImageBitmap(AvatarBitmapUtils.getAvatarUtils().getAvartar(2));
             return;
         }
         btn_start.setText("待准备");
+        iv_player2.setImageBitmap(AvatarBitmapUtils.getAvatarUtils().getAvartar(2));
+        btn_start.setBackgroundResource(R.mipmap.btn_prepare92);
         btn_start.setSelected(false);
         if (mFriendInfo.isOnline()) {
 
@@ -144,7 +153,9 @@ public class GameRoomActivity extends AppCompatActivity {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                mBluetoothChatHelper.connect(mFriendInfo.getBluetoothDevice(), true);
+                if (mBluetoothChatHelper != null && mFriendInfo != null) {
+                    mBluetoothChatHelper.connect(mFriendInfo.getBluetoothDevice(), true);
+                }
             }
         }, 3000);
     }
@@ -153,7 +164,11 @@ public class GameRoomActivity extends AppCompatActivity {
         btn_start = (Button) findViewById(R.id.btn_start);
         tv_player1 = (TextView) findViewById(R.id.tv_player1);
         tv_player2 = (TextView) findViewById(R.id.tv_player2);
+        iv_player1 = (ImageView) findViewById(R.id.iv_player1);
+        iv_player2 = (ImageView) findViewById(R.id.iv_player2);
         tv_player2.setText(mBluetoothChatHelper.getAdapter().getName());
+
+
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,8 +177,8 @@ public class GameRoomActivity extends AppCompatActivity {
                     msg.setAction(Actions.ACTION_START_GAME);
                     sendMessage(msg);
                 }
+                GameApplication.getApp().getSoundManager().buttonSound();
                 if (mFriendInfo != null) {
-                    GameApplication.getApp().getSoundManager().buttonSound();
                     if (btn_start.isSelected()) {
                         btn_start.setText("待准备");
                         btn_start.setSelected(false);

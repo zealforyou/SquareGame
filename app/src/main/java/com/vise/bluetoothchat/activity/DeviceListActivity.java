@@ -4,22 +4,22 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.vise.basebluetooth.utils.BluetoothUtil;
@@ -47,20 +47,20 @@ public class DeviceListActivity extends BaseChatActivity
     private ExpandableListView mGroupFriendLv;
     private GroupFriendAdapter mGroupFriendAdapter;
     private List<GroupInfo> mGroupFriendListData = new ArrayList<>();
+    private BroadcastReceiver bluetoothReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_friend);
     }
 
     @Override
     protected void initWidget() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        FloatingActionButton create_room = (FloatingActionButton) findViewById(R.id.create_room);
+        ImageView fab = (ImageView) findViewById(R.id.fab);
+        ImageView create_room = (ImageView) findViewById(R.id.create_room);
         create_room.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,14 +76,6 @@ public class DeviceListActivity extends BaseChatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
         mGroupFriendLv = (ExpandableListView) findViewById(R.id.friend_group_list);
     }
@@ -105,6 +97,19 @@ public class DeviceListActivity extends BaseChatActivity
                 }
             }, 3000);
         }
+
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
+        bluetoothReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                int boundState = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, -1);
+                if (boundState == BluetoothDevice.BOND_BONDED) {
+                    findDevice();
+                }
+
+            }
+        };
+        registerReceiver(bluetoothReceiver, filter);
     }
 
     @Override
@@ -151,12 +156,7 @@ public class DeviceListActivity extends BaseChatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
 
     @Override
@@ -204,9 +204,6 @@ public class DeviceListActivity extends BaseChatActivity
         } else if (id == R.id.nav_send) {
 
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -249,6 +246,7 @@ public class DeviceListActivity extends BaseChatActivity
                 friendInfo.setJoinTime(DateTime.getStringByFormat(new Date(), DateTime.DEFYMDHMS));
                 friendInfo.setBluetoothDevice(device);
                 friendInfoList.add(friendInfo);
+                friendInfo.setAvatarId((int) (Math.random() * 14 * 16));
             }
             groupInfo.setFriendList(friendInfoList);
             groupInfo.setOnlineNumber(0);
@@ -260,6 +258,7 @@ public class DeviceListActivity extends BaseChatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (bluetoothReceiver != null) unregisterReceiver(bluetoothReceiver);
         GameApplication.getApp().getSoundManager().release();
         GameApplication.getApp().setSoundManager(null);
     }
