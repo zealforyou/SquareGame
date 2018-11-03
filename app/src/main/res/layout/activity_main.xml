@@ -13,74 +13,115 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <TextView
-        android:id="@+id/tv_score"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_game_icon9"/>
+        <TextView
+            android:id="@+id/tv_score_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="#FFA82B"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:padding="10dp"
-        android:text="我方：0"
-        android:textColor="#99ff32"
-        android:textSize="20sp"/>
-
-    <TextView
-        android:id="@+id/tv_score_other"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="对方：0"
-        android:textColor="#ff534d"
-        android:textSize="20sp"/>
-
-    <TextView
-        android:id="@+id/tv_pk_score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="（ 2000胜利 ）"
-        android:layout_centerHorizontal="true"
-        android:textColor="#FFCC00"
-        android:textSize="13sp"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/gameView"
-        android:layout_marginBottom="10dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btn_rotate"
+        <TextView
+            android:id="@+id/tv_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#ff25c6fc"
-            android:text="旋转"
-            android:textColor="#fff"/>
+            android:layout_alignParentRight="true"
+            android:text="0"
+            android:textColor="#99ff32"
+            android:textSize="20sp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_game_33"/>
+    </LinearLayout>
 
-        <Button
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@mipmap/ic_icon_game_5"/>
+
+        <TextView
+            android:id="@+id/tv_pk_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2000"
+            android:layout_marginLeft="8dp"
+            android:textColor="#FCE9B7"
+            android:textSize="13sp"/>
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal">
+
+        <ImageView
             android:id="@+id/btn_move_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#edd0be"
-            android:text="左移"
-            android:textColor="#000"/>
+            android:src="@mipmap/ic_move_left"/>
 
-        <Button
-            android:id="@+id/btn_move_right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#edd0be"
-            android:text="右移"
-            android:textColor="#000"/>
-
-        <Button
+        <ImageView
             android:id="@+id/btn_move_quick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#ff534d"
-            android:text="快速"
-            android:textColor="#fff"/>
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="10dp"
+            android:src="@mipmap/ic_move_down"
+            />
+
+        <ImageView
+            android:id="@+id/btn_move_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_move_right"/>
+
+        <ImageView
+            android:id="@+id/btn_rotate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:src="@mipmap/ic_game_back"
+            />
+
     </LinearLayout>
+
 
 </RelativeLayout>

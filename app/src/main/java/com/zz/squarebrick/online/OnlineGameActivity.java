@@ -102,9 +102,9 @@ public class OnlineGameActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        tv_score_other.setText("对方：" + score);
+                        tv_score_other.setText("" + score);
                     }
-                });
+                });//对方：
                 break;
             case Actions.ACTION_GAME_OVER:
                 final GameOver gameOver = msg.getGameOver();
@@ -233,7 +233,7 @@ public class OnlineGameActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            tv_score.setText("我方：" + score);
+                            tv_score.setText("" + score);//我方
                         }
                     });
                 }
@@ -261,8 +261,9 @@ public class OnlineGameActivity extends AppCompatActivity {
 
     private void showGameOverDialog(GameOver gameOver, boolean opponent) {
         GameApplication.getApp().getSoundManager().gameOver();
-        Dialog dialog = new Dialog(this);
-        dialog.setCancelable(true);
+        final Dialog dialog = new Dialog(this);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
@@ -271,6 +272,12 @@ public class OnlineGameActivity extends AppCompatActivity {
             }
         });
         View inflate = getLayoutInflater().inflate(R.layout.dialog_game_over, null);
+        inflate.findViewById(R.id.btn_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
         TextView tv_game_win = (TextView) inflate.findViewById(R.id.tv_game_win);
         //对手
         if (opponent) {

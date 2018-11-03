@@ -6,8 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/ic_game_bg1"
-    android:paddingBottom="20dp"
-    android:paddingTop="20dp"
     tools:context="com.zz.squarebrick.online.GameRoomActivity">
 
     <LinearLayout
@@ -15,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:gravity="center_horizontal"
+        android:layout_marginTop="30dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -59,6 +58,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
         android:layout_centerHorizontal="true"
         android:gravity="center_horizontal"
         android:orientation="vertical">
@@ -107,8 +107,15 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:background="@mipmap/ic_game_icon8"
+        android:background="@drawable/select_start"
         android:gravity="center"
         android:textColor="#FC8006"
         android:textSize="20sp"/>
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/ic_game_back"/>
 </RelativeLayout>

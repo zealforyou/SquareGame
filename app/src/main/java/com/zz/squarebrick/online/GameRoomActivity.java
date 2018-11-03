@@ -42,6 +42,7 @@ public class GameRoomActivity extends AppCompatActivity {
     private Button btn_start;
     private ImageView iv_player1;
     private ImageView iv_player2;
+    private ImageView iv_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +138,7 @@ public class GameRoomActivity extends AppCompatActivity {
     private void initData() {
         mFriendInfo = this.getIntent().getParcelableExtra(AppConstant.FRIEND_INFO);
         if (mFriendInfo == null) {
-            btn_start.setBackgroundResource(R.mipmap.ic_game_icon8);
+            btn_start.setBackgroundResource(R.drawable.select_start);
             iv_player2.setImageBitmap(AvatarBitmapUtils.getAvatarUtils().getAvartar(2));
             return;
         }
@@ -166,9 +167,15 @@ public class GameRoomActivity extends AppCompatActivity {
         tv_player2 = (TextView) findViewById(R.id.tv_player2);
         iv_player1 = (ImageView) findViewById(R.id.iv_player1);
         iv_player2 = (ImageView) findViewById(R.id.iv_player2);
+        iv_back = (ImageView) findViewById(R.id.iv_back);
         tv_player2.setText(mBluetoothChatHelper.getAdapter().getName());
 
-
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

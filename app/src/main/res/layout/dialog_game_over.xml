@@ -9,7 +9,7 @@
         android:layout_height="200dp"
         android:layout_centerInParent="true"
         android:background="@drawable/shape_round"
-        android:gravity="center"
+        android:gravity="center_horizontal|bottom"
         android:orientation="vertical">
 
         <TextView
@@ -23,9 +23,16 @@
             android:id="@+id/tv_game_win"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:text="你赢了"
             android:textColor="#fff"
             android:textSize="20sp"/>
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:src="@mipmap/ic_game_back"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 </RelativeLayout>
