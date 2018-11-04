@@ -140,8 +140,23 @@ public class OnlineGame2 extends SurfaceView implements SurfaceHolder.Callback, 
         playBgm();
         while (runing) {
             draw();
+            boolean noWait = false;
+            //可消除预判，优化消除等待时间
+            synchronized (this) {
+                if (!currentCell.canMoveDown(cells, rows)) {
+                    fillCells();
+                    refreshLimit();
+                    if (hasFadeRow() != -1) {
+                        noWait = true;
+                    } else {
+                        for (int i = 0; i < 4; i++) {
+                            cells.removeLast();
+                        }
+                    }
+                }
+            }
             try {
-                if (quikDown || currentCell.canRotate(90, cells, columns, rows) == null) {
+                if (quikDown || noWait) {
                     Thread.sleep(50);
                 } else {
                     Thread.sleep(600);
@@ -149,11 +164,11 @@ public class OnlineGame2 extends SurfaceView implements SurfaceHolder.Callback, 
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            control();
+            control(noWait);
         }
     }
 
-    public void rotate() {
+    public synchronized void rotate() {
         if (currentCell != null && runing) {
             int[][] ints = currentCell.canRotate(90, cells, columns, rows);
             if (ints != null) {
@@ -181,7 +196,7 @@ public class OnlineGame2 extends SurfaceView implements SurfaceHolder.Callback, 
         quikDown = false;
     }
 
-    public void moveRight() {
+    public synchronized void moveRight() {
         if (currentCell != null && currentCell.canMoveRight(cells, columns) && runing) {
             currentCell.moveRight();
             draw();
@@ -189,7 +204,7 @@ public class OnlineGame2 extends SurfaceView implements SurfaceHolder.Callback, 
     }
 
 
-    public void moveLeft() {
+    public synchronized void moveLeft() {
         if (currentCell != null && currentCell.canMoveLeft(cells) && runing) {
             currentCell.moveLeft();
             draw();
@@ -253,7 +268,8 @@ public class OnlineGame2 extends SurfaceView implements SurfaceHolder.Callback, 
         }
         for (int i = 0; i < cells.size(); i++) {
             Square.Cell cell = cells.get(i);
-            limit[cell.getRow()]++;
+            if (cell.getRow() > -1)
+                limit[cell.getRow()]++;
         }
     }
 
@@ -310,20 +326,23 @@ public class OnlineGame2 extends SurfaceView implements SurfaceHolder.Callback, 
         }
     }
 
+    //填充单元方格
+    private void fillCells() {
+        for (int i = 0; i < currentCell.cells.length; i++) {
+            cells.add(new Square.Cell(currentCell.cells[i][0], currentCell.cells[i][1], currentCell.color));
+        }
+    }
+
     //下移控制
-    private void control() {
+    private synchronized void control(boolean noWait) {
         if (currentCell.canMoveDown(cells, rows)) {
             currentCell.move();
         } else {
-            quikDown = false;
-            for (int i = 0; i < currentCell.cells.length; i++) {
-                cells.add(new Square.Cell(currentCell.cells[i][0], currentCell.cells[i][1], currentCell.color));
-                if (currentCell.cells[i][0] > -1) {
-                    limit[currentCell.cells[i][0]]++;
-                }
-
-            }
+            if (!noWait)
+                fillCells();
+            refreshLimit();
             currentCell = null;
+            quikDown = false;
             fade();
             //生成新的可运动方块
             currentCell = Square.generate(columns);

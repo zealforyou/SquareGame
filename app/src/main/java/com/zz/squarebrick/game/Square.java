@@ -144,9 +144,6 @@ public class Square {
     public int[][] canRotate(int deg, List<Cell> dst, int cols, int rows) {
 
         if (type == Type.TYPE_O) return cells;
-        if (!canMoveLeft(dst) && !canMoveRight(dst, cols)) {
-            return null;
-        }
         double d = Math.PI / 180 * deg;
         int temp[][] = new int[4][2];
         for (int i = 0; i < cells.length; i++) {
