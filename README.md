@@ -1,6 +1,19 @@
 #俄罗斯方块（蓝牙联机版）
 ----
+
+##游戏截图
+
+<div>
+<img style="float:left;margin:5" src="img/design.png" width="40%" height="40%" />
+<img style="float:left;margin:5" src="img/design2.png" width="40%" height="40%" />
+</div>
+<div>
+<img style="float:left;margin:5" src="img/design.png" width="40%" height="40%" />
+<img style="float:left;margin:5" src="img/design2.png" width="40%" height="40%" />
+</div>
+
 ##关于设计
+
 从没有过用android原生去写一个游戏，但想想觉得挺有意思的，既能从开发中去了解游戏的制作流程，也能锻炼自己的设计和算法能力。这款游戏很基础，但是也很经典，涉及的难点就是怎么表示每一个方块的坐标，以及怎么去控制它的移动和旋转。我主要是通过excel来设计的，请看图：
 <div>
 <img style="float:left;margin:5" src="img/design.png" width="40%" height="40%" />
@@ -180,6 +193,7 @@ public int[][] canRotate(int deg, List<Cell> dst, int cols, int rows) {
 >有关粒子爆炸效果的实现，由于代码量比较大，就不在此贴出来了，想看如何实现的可以clone我工程看看。网上也有很多实现，他们是基于bitmap的，我进行了改装，因为我画的单元格不是bitmap
 
 ---
+
 >蓝牙通信的实现，对于安卓开发的人来说并不陌生，手机连手机我们用的是传统蓝牙协议，也是基于socket协议的。所以在我们建立连接后，如何进行游戏数据交互，也就是如何用socket传输我们的数据。我的实现，是通过json来定义数据协议的，目前联机交互只涉及到玩家准备，开始，分数传输，游戏规则。还有一个道具模式，目前正在开发中。
 ```java
 private void sendMessage(GameMsg msg) {
@@ -190,6 +204,28 @@ private void sendMessage(GameMsg msg) {
             e.printStackTrace();
         }
 }
+```
+
+>此外我发现一个很有意思的大图加载方式。我有一张大图，里面有很多头像。因为都在一张图里面，我需要将里面的头像裁剪出来使用，但是大图加载涉及到OOM的问题，所以我们不能将原图加载到应用中。如果压缩了，那么头像就会失真。
+最后我的处理方式是通过这个类实现的BitmapRegionDecoder（位图区域解码）,不过还得处理缓存的问题，毕竟里面头像比较多。
+```java
+ public Bitmap getAvartar(Integer index) {
+        Bitmap bitmap = getBitmapFromMemCache(index);
+        if (bitmap == null) {
+            int row = index / cols;
+            int col = index % cols;
+            Rect rect = new Rect();
+            rect.left = col * (colWidth + space);
+            rect.top = row * (colWidth + space);
+            rect.right = rect.left + colWidth + space;
+            rect.bottom = rect.top + colWidth + space;
+            bitmap = bitmapDecoder.decodeRegion(rect, options);
+            addBitmapToMemory(index, bitmap);
+        }
+        return bitmap;
+
+
+ }
 ```
 ##关于作者
 
