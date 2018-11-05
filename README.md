@@ -1,4 +1,5 @@
 #俄罗斯方块（蓝牙联机版）
+><a href="img/app-release.apk" target="_blank">下载体验</a>
 ----
 
 ##游戏截图
