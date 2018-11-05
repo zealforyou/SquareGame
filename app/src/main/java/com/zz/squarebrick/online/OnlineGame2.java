@@ -218,16 +218,16 @@ public class OnlineGame2 extends SurfaceView implements SurfaceHolder.Callback, 
         while ((fadeRow = hasFadeRow()) != -1) {
             //删除单元格
             count++;
-            explode(fadeRow);
-            soundManager.playEliminate(count);
-            explode2(fadeRow);
+            explode(fadeRow);//抖动效果
+            soundManager.playEliminate(count);//播放消除音效
+            explode2(fadeRow);//爆炸效果
             deleteRowCell(fadeRow);
             moveAllCell(fadeRow);
             draw();
             refreshLimit();
         }
         caculateScore(count);
-        soundManager.playN(count);
+        soundManager.playN(count);//播放最终得分音效
         Log.i("www", "count:" + count);
     }
 
@@ -390,14 +390,14 @@ public class OnlineGame2 extends SurfaceView implements SurfaceHolder.Callback, 
     }
 
     /**
-     * 爆破
+     * 抖动
      */
     public void explode(int row) {
-        //防止重复点击
         long startTime = System.currentTimeMillis();
         int duration = 100;
         Random random = new Random();
-        while (System.currentTimeMillis() - startTime < duration) {
+        while (System.currentTimeMillis() - startTime < duration) {//进度控制
+            //抖动计算
             float transX = (random.nextFloat() - 0.5f) * getWidth() * 0.01f;
             float transY = (random.nextFloat() - 0.5f) * getHeight() * 0.01f;
             Canvas canvas = holder.lockCanvas();
@@ -417,7 +417,9 @@ public class OnlineGame2 extends SurfaceView implements SurfaceHolder.Callback, 
             holder.unlockCanvasAndPost(canvas);
         }
     }
-
+    /**
+     * 爆炸
+     */
     private void explode2(int row) {
 //        view.animate().setDuration(150).scaleX(0f).scaleY(0f).alpha(0f).start();
         int random = (int) (Math.random() * 6);
