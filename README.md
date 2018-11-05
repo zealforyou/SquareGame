@@ -2,7 +2,7 @@
 
 
 ><a href="https://github.com/zealforyou/SquareGame/raw/master/img/%E4%BF%84%E7%BD%97%E6%96%AF%E6%96%B9%E5%9D%97%E8%93%9D%E7%89%99%E7%89%88.apk" target="_blank">下载体验</a>
-<img style="margin:5" src="img/qrcode.png" width="35%" height="35%" />
+<img style="margin:5" src="img/qrcode1.png" width="35%" height="35%" />
 
 ---
 
