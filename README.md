@@ -1,9 +1,12 @@
-#俄罗斯方块（蓝牙联机版）
+# 俄罗斯方块（蓝牙联机版）
+
+
 ><a href="raw/master/img/俄罗斯方块蓝牙版.apk" target="_blank">下载体验</a>
 <img style="margin:5" src="img/qrcode.png" width="35%" height="35%" />
 ----
 
-##游戏截图
+## 游戏截图
+
 
 <div>
 <img style="float:left;margin:5" src="img/img1.png" width="25%" height="25%" />
@@ -16,7 +19,8 @@
 </div>
 
 
-##关于设计
+## 关于设计
+
 
 从没有过用android原生去写一个游戏，但想想觉得挺有意思的，既能从开发中去了解游戏的制作流程，也能锻炼自己的设计和算法能力。这款游戏很基础，但是也很经典，涉及的难点就是怎么表示每一个方块的坐标，以及怎么去控制它的移动和旋转。我主要是通过excel来设计的，请看图：
 
@@ -238,7 +242,8 @@ private void sendMessage(GameMsg msg) {
 
  }
 ```
-##关于作者
+## 关于作者
+
 
 ```java
     class Author{
