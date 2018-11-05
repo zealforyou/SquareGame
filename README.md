@@ -2,8 +2,11 @@
 ----
 ##关于设计
 从没有过用android原生去写一个游戏，但想想觉得挺有意思的，既能从开发中去了解游戏的制作流程，也能锻炼自己的设计和算法能力。这款游戏很基础，但是也很经典，涉及的难点就是怎么表示每一个方块的坐标，以及怎么去控制它的移动和旋转。我主要是通过excel来设计的，请看图：
-![设计1](img/design)
-![设计2](img/design2)
+<div>
+<img style="float:left;margin:5" src="img/design.png" width="40%" height="40%" />
+<img style="float:left;margin:5" src="img/design2.png" width="40%" height="40%" />
+</div>
+
 >这是我定义的方块实体，以行列的形式。行和列是在建立游戏坐标系的时候定义的，比如我规定一行有12格，一列有18格，并且我在实体内预先定义了不同形状的方块，后期我便能够直接使用这些定义好的方块
 ```java
     private int columns = 12;
