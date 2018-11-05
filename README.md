@@ -4,23 +4,27 @@
 ##游戏截图
 
 <div>
-<img style="float:left;margin:5" src="img/design.png" width="40%" height="40%" />
-<img style="float:left;margin:5" src="img/design2.png" width="40%" height="40%" />
+<img style="float:left;margin:5" src="img/img1.png" width="25%" height="25%" />
+<img style="float:left;margin:5" src="img/img2.png" width="25%" height="25%" />
+<img style="float:left;margin:5" src="img/img3.png" width="25%" height="25%" />
 </div>
 <div>
-<img style="float:left;margin:5" src="img/design.png" width="40%" height="40%" />
-<img style="float:left;margin:5" src="img/design2.png" width="40%" height="40%" />
+<img style="float:left;margin:5" src="img/img4.png" width="25%" height="25%" />
+<img style="float:left;margin:5" src="img/img5.png" width="25%" height="25%" />
 </div>
+
 
 ##关于设计
 
 从没有过用android原生去写一个游戏，但想想觉得挺有意思的，既能从开发中去了解游戏的制作流程，也能锻炼自己的设计和算法能力。这款游戏很基础，但是也很经典，涉及的难点就是怎么表示每一个方块的坐标，以及怎么去控制它的移动和旋转。我主要是通过excel来设计的，请看图：
+
 <div>
 <img style="float:left;margin:5" src="img/design.png" width="40%" height="40%" />
 <img style="float:left;margin:5" src="img/design2.png" width="40%" height="40%" />
 </div>
 
 >这是我定义的方块实体，以行列的形式。行和列是在建立游戏坐标系的时候定义的，比如我规定一行有12格，一列有18格，并且我在实体内预先定义了不同形状的方块，后期我便能够直接使用这些定义好的方块
+
 ```java
     private int columns = 12;
     private int rows = 18;
@@ -48,16 +52,21 @@
     
 ```
 >关于如何旋转，是通过一个三角函数来实现的
+
 ```java
   double nx = x * Math.cos(d) - y * Math.sin(d);
   double ny = y * Math.cos(d) + x * Math.sin(d);    
 ```
+
 >不过因为游戏的坐标系是以单元格的形式，而函数算出来的坐标是像素，所以需要进行取整处理，用四舍五入的方法可以得到精确的单元坐标，处理方式如下
+
 ```java
  temp[i][0] = (int) Math.round(nx + cells[centerIndex][0]);
  temp[i][1] = (int) Math.round(ny + cells[centerIndex][1]);
 ```
+
 >移动的操作就比较简单了，只需要给单元格的列（<code>cell[i][1]</code>）+1,然后在绘图中乘以列的宽度即可，但是在移动操作的时候要进行边界加测。然后旋转操作也是需要进行边界检测和碰撞判定的，我们可以做一个预操作，得到结果再和已存在的方块进行碰撞计算，如果没有碰撞则可以下一步操作，碰到了则不予操作。
+
 ```java
 public int[][] canRotate(int deg, List<Cell> dst, int cols, int rows) {
 
